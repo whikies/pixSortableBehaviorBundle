@@ -23,12 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Pix\SortableBehaviorBundle
  */
 class SortableAdminController extends CRUDController
-{
-//     public function __construct(PositionHandler $positionHandler)
-//     {
-//         $this->positionHandler = $positionHandler;
-//     }
-    
+{    
     /**
      * Move element
      *
