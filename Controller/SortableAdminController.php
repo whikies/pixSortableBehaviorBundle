@@ -30,7 +30,7 @@ class SortableAdminController extends CRUDController
      *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function moveAction($position)
+    public function moveAction($position, PositionHandler $positionHandler)
     {
         $translator = $this->get('translator');
 
@@ -47,7 +47,7 @@ class SortableAdminController extends CRUDController
         }
 
         /** @var PositionHandler $positionHandler */
-        $positionHandler = $this->get('pix_sortable_behavior.position');
+        //$positionHandler = $this->get('pix_sortable_behavior.position');
         $object          = $this->admin->getSubject();
 
         $lastPositionNumber = $positionHandler->getLastPosition($object);
