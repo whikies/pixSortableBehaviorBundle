@@ -15,6 +15,7 @@ use Pix\SortableBehaviorBundle\Services\PositionHandler;
 use Sonata\AdminBundle\Controller\CRUDController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class SortableAdminController
@@ -23,10 +24,10 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class SortableAdminController extends CRUDController
 {
-    public function __construct(PositionHandler $positionHandler)
-    {
-        $this->positionHandler = $positionHandler;
-    }
+//     public function __construct(PositionHandler $positionHandler)
+//     {
+//         $this->positionHandler = $positionHandler;
+//     }
     
     /**
      * Move element
@@ -35,7 +36,7 @@ class SortableAdminController extends CRUDController
      *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function moveAction($position)
+    public function moveAction(PositionHandler $positionHandler, Request $request, $position)
     {
         $translator = $this->get('translator');
 
@@ -55,15 +56,15 @@ class SortableAdminController extends CRUDController
         //$positionHandler = $this->get('pix_sortable_behavior.position');
         $object          = $this->admin->getSubject();
 
-        $lastPositionNumber = $this->positionHandler->getLastPosition($object);
-        $newPositionNumber  = $this->positionHandler->getPosition($object, $position, $lastPositionNumber);
+        $lastPositionNumber = $positionHandler->getLastPosition($object);
+        $newPositionNumber  = $positionHandler->getPosition($object, $position, $lastPositionNumber);
 
         $accessor = PropertyAccess::createPropertyAccessor();
-        $accessor->setValue($object, $this->positionHandler->getPositionFieldByEntity($object), $newPositionNumber);
+        $accessor->setValue($object, $positionHandler->getPositionFieldByEntity($object), $newPositionNumber);
 
         $this->admin->update($object);
 
-        if ($this->isXmlHttpRequest()) {
+        if ($this->isXmlHttpRequest($request)) {
             return $this->renderJson(array(
                 'result' => 'ok',
                 'objectId' => $this->admin->getNormalizedIdentifier($object)
