@@ -23,6 +23,10 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class SortableAdminController extends CRUDController
 {
+    public function __construct(PositionHandler $positionHandler)
+    {
+        $this->positionHandler = $positionHandler
+    }
     /**
      * Move element
      *
@@ -30,7 +34,7 @@ class SortableAdminController extends CRUDController
      *
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function moveAction($position, PositionHandler $positionHandler)
+    public function moveAction($position)
     {
         $translator = $this->get('translator');
 
@@ -50,11 +54,11 @@ class SortableAdminController extends CRUDController
         //$positionHandler = $this->get('pix_sortable_behavior.position');
         $object          = $this->admin->getSubject();
 
-        $lastPositionNumber = $positionHandler->getLastPosition($object);
-        $newPositionNumber  = $positionHandler->getPosition($object, $position, $lastPositionNumber);
+        $lastPositionNumber = $this->positionHandler->getLastPosition($object);
+        $newPositionNumber  = $this->positionHandler->getPosition($object, $position, $lastPositionNumber);
 
         $accessor = PropertyAccess::createPropertyAccessor();
-        $accessor->setValue($object, $positionHandler->getPositionFieldByEntity($object), $newPositionNumber);
+        $accessor->setValue($object, $this->positionHandler->getPositionFieldByEntity($object), $newPositionNumber);
 
         $this->admin->update($object);
 
