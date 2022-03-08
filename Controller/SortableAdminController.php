@@ -25,8 +25,9 @@ class SortableAdminController extends CRUDController
 {
     public function __construct(PositionHandler $positionHandler)
     {
-        $this->positionHandler = $positionHandler
+        $this->positionHandler = $positionHandler;
     }
+    
     /**
      * Move element
      *
